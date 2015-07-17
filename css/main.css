@@ -2,3 +2,37 @@
   display: inline-block;
   margin-top: 30px;
 }
+@media (min-width: 768px) {
+  .navbar-header {
+    float: none;
+    text-align: center;
+  }
+  .navbar>.container .navbar-brand,
+  .navbar>.container-fluid .navbar-brand {
+    margin-left: 0;
+  }
+  .carousel-inner>.item>a>img,
+  .carousel-inner>.item>img {
+    width: 100%;
+    max-height: 650px;
+  }
+}
+.navbar-brand {
+  display: inline-block;
+  float: none;
+  height: auto;
+  border: 2px solid #777;
+  padding: 10px 15px;
+  margin: 5px 0;
+}
+.navbar-brand:hover {
+  border-color: #5e5e5e;
+}
+.navbar-default {
+  border-bottom: none;
+}
+
+footer {
+  margin-top: 40px;
+  color: #999;
+}
