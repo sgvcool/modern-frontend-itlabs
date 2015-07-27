@@ -39,10 +39,12 @@ module.exports = function(type) {
       }]
     },
     plugins: [
+      new webpack.NoErrorsPlugin(),
       new webpack.ProvidePlugin({
         $: "jquery",
         jQuery: "jquery"
       }),
+      new webpack.optimize.DedupePlugin(),
       new webpack.DefinePlugin({
         VERSION: JSON.stringify("0.0.1"),
         BROWSER_SUPPORTS_HTML5: true
