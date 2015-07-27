@@ -13,7 +13,8 @@ module.exports = function(type) {
     },
     output: {
       path: path.join(__dirname, 'dist', 'js'),
-      filename: 'main.js'
+      filename: '[name].bundle.js',
+      chunkFilename: '[id].chunk.js'
     },
     debug: isDev,
     module: {
