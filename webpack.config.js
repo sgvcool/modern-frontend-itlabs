@@ -1,30 +1,30 @@
-var webpack = require("webpack");
-var path = require("path");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var path = require("path"),
+  node_modules = path.join(__dirname, 'node_modules'),
+  webpack = require("webpack"),
+  ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-module.exports = function(type) {
-
-  var isDev = type === 'development';
-
+module.exports = function(props) {
   var config = {
-    context: path.join(__dirname, "app"),
+    context: path.join(__dirname, props.app),
     entry: {
-      vendor: ["jquery", "bootstrap-sass"],
-      app: './scripts/main'
+      app: ['./scripts/main'],
+      vendor: ['jquery', 'bootstrap-sass']
     },
     output: {
-      path: path.join(__dirname, 'dist'),
-      filename: '[name].bundle.js',
-      chunkFilename: '[id].chunk.js'
+      path: path.join(__dirname, props.dist),
+      filename: props.dev ? '[name].bundle.js' : '[chunkhash].js',
+      chunkFilename: props.dev ? '[id].chunk.js' : '[chunkhash].js'
     },
-    debug: isDev,
     module: {
       loaders: [{
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract("style", "css!sass")
+        loader: props.dev ? 'style!css!sass' : ExtractTextPlugin.extract("style", "css!sass")
       }, {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url?limit=10000&minetype=application/font-woff"
+      }, {
+        test: /\.css$/,
+        loader: props.dev ? 'style!css' : ExtractTextPlugin.extract('style', 'css?-minimize')
       }, {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url?limit=10000&minetype=application/font-woff"
@@ -39,33 +39,47 @@ module.exports = function(type) {
         loader: "url?limit=10000&minetype=image/svg+xml"
       }]
     },
+    // postcss: props.dev ? [autoprefixer] : [autoprefixer({browsers: ['> 1%']})],
+    devServer: {
+      contentBase: props.dist,
+      hot: true
+    },
     plugins: [
-      new webpack.NoErrorsPlugin(),
       new webpack.ProvidePlugin({
         $: "jquery",
         jQuery: "jquery"
       }),
-      new webpack.optimize.DedupePlugin(),
       new webpack.DefinePlugin({
         VERSION: JSON.stringify("0.0.1"),
         BROWSER_SUPPORTS_HTML5: true
       }),
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false
-        }
-      }),
       new webpack.optimize.CommonsChunkPlugin({
         name: "vendor",
-        minChunks: Infinity,
+        minChunks: Infinity
       }),
-      new ExtractTextPlugin("styles.css")
     ]
   };
-
-  if (isDev) {
-    config.devtool = 'eval';
+  if (props.dev) {
+    config.plugins.push(
+      new webpack.HotModuleReplacementPlugin()
+    );
+  } else {
+    config.plugins.push(
+      new ExtractTextPlugin('style.css'),
+      new webpack.optimize.OccurenceOrderPlugin(true),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {warning: false},
+        sourceMap: false,
+        output: {comments: false}
+      }),
+      new webpack.optimize.DedupePlugin(),
+      new webpack.NoErrorsPlugin(),
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV_MODE: JSON.stringify('production')
+        }
+      })
+    );
   }
-
   return config;
 };

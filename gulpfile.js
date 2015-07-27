@@ -3,14 +3,16 @@ var path = require('path');
 var $ = require('gulp-load-plugins')();
 var del = require('del');
 var webpack = require('webpack');
-// set variable via $ gulp --type production
-var environment = $.util.env.type || 'development';
-var isProduction = environment === 'production';
 var webpackConfig = require('./webpack.config');
+var webpackDevServer = require('webpack-dev-server');
+var gutil = require('gulp-util');
 
-var port = $.util.env.port || 3000;
-var app = 'app/';
-var dist = 'dist/';
+var props = {
+  app: 'app',
+  dist: './dist',
+  host: 'localhost',
+  port: $.util.env.port || 3000
+};
 
 // https://github.com/ai/autoprefixer
 var autoprefixerBrowsers = [
@@ -27,15 +29,16 @@ var autoprefixerBrowsers = [
 
 // copy html from app to dist
 gulp.task('html', function() {
-  return gulp.src(app + 'index.html')
-    .pipe(gulp.dest(dist))
+  return gulp.src(props.app + 'index.html')
+    .pipe($.rigger())
+    .pipe(gulp.dest(props.dist))
     .pipe($.size({ title : 'html' }))
     .pipe($.connect.reload());
 });
 
 gulp.task('styles', function(cb) {
 
-  return gulp.src(app + 'styles/main.scss')
+  return gulp.src(props.app + 'styles/main.scss')
     .pipe($.sass.sync({
       outputStyle: 'expanded',
       precision: 10,
@@ -49,36 +52,35 @@ gulp.task('styles', function(cb) {
 // add livereload on the given port
 gulp.task('serve', function() {
   $.connect.server({
-    root: dist,
-    port: port,
+    root: props.dist,
+    port: props.port,
     livereload: {
       port: 35729
     }
   });
 });
 
-// copy images
-gulp.task('images', function(cb) {
-  return gulp.src(app + 'images/**/*.{png,jpg,jpeg,gif}')
-    .pipe($.size({ title : 'images' }))
-    .pipe(gulp.dest(dist + 'images/'));
+gulp.task('resources', function(cb) {
+  return gulp.src(props.app + '/**/*.{png,jpg,jpeg,gif,ico}')
+    .pipe($.size({ title : 'resources' }))
+    .pipe(gulp.dest(props.dist));
 });
 
 // watch styl, html and js file changes
 gulp.task('watch', function() {
-  gulp.watch(app + 'styles/*.css', ['styles']);
-  gulp.watch(app + 'index.html', ['html']);
-  gulp.watch(app + 'scripts/**/*.js', ['scripts']);
+  gulp.watch(props.app + 'styles/*.css', ['styles']);
+  gulp.watch(props.app + 'index.html', ['html']);
+  gulp.watch(props.app + 'scripts/**/*.js', ['scripts']);
 });
 
 // remove bundels
 gulp.task('clean', function(cb) {
-  del([dist], cb);
+  del([props.dist], cb);
 });
 
 gulp.task('webpack', function(){
-  webpack(webpackConfig(), function(err, stats) {
-    if(err) throw console.log(err)
+  webpack(webpackConfig(props), function(err, stats) {
+    if(err) throw console.log(err);
     console.log("webpack" + stats.toString());
   });
 });
@@ -88,5 +90,24 @@ gulp.task('default', ['build', 'serve', 'watch']);
 
 // waits until clean is finished then builds the project
 gulp.task('build', ['clean'], function(){
-  gulp.start(['webpack', 'images', 'html']);
+  gulp.start(['webpack', 'resources', 'html']);
+});
+
+
+gulp.task('dev', function () {
+  gulp.start('resources');
+  gulp.src(props.app + '/template/index-dev.html')
+    .pipe($.rigger()).pipe($.rename('index.html'))
+    .pipe(gulp.dest(props.dist));
+  props.dev = true;
+  var url = 'http://' + props.host + ':' + props.port;
+  var dev = Object.create(webpackConfig(props));
+  dev.entry.app.push('webpack/hot/dev-server');
+  new webpackDevServer(webpack(dev), {
+    contentBase: dev.devServer.contentBase,
+    hot: dev.devServer.hot
+  }).listen(props.port, props.host, function (err) {
+    if (err) throw new gutil.PluginError('webpack-dev-server', err);
+    gutil.log('[webpack-dev-server]', url + '/webpack-dev-server/index.html');
+  });
 });
