@@ -7,11 +7,12 @@ module.exports = function(type) {
 
   var config = {
     context: path.join(__dirname, "app"),
-    entry: [
-      './scripts/main'
-    ],
+    entry: {
+      vendor: ["jquery", "bootstrap-sass"],
+      app: './scripts/main'
+    },
     output: {
-      path: path.join(__dirname, 'dist'),
+      path: path.join(__dirname, 'dist', 'js'),
       filename: 'main.js'
     },
     debug : isDev,
@@ -30,6 +31,10 @@ module.exports = function(type) {
       new webpack.ProvidePlugin({
         $: "jquery",
         jQuery: "jquery"
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        name: "vendor",
+        minChunks: Infinity,
       })
     ]
   };
@@ -39,4 +44,4 @@ module.exports = function(type) {
   }
 
   return config;
-}
+};
