@@ -1,5 +1,6 @@
 var webpack = require("webpack");
 var path = require("path");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = function(type) {
 
@@ -12,7 +13,7 @@ module.exports = function(type) {
       app: './scripts/main'
     },
     output: {
-      path: path.join(__dirname, 'dist', 'js'),
+      path: path.join(__dirname, 'dist'),
       filename: '[name].bundle.js',
       chunkFilename: '[id].chunk.js'
     },
@@ -20,7 +21,7 @@ module.exports = function(type) {
     module: {
       loaders: [{
         test: /\.scss$/,
-        loader: "style!css!sass"
+        loader: ExtractTextPlugin.extract("style", "css!sass")
       }, {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url?limit=10000&minetype=application/font-woff"
@@ -57,7 +58,8 @@ module.exports = function(type) {
       new webpack.optimize.CommonsChunkPlugin({
         name: "vendor",
         minChunks: Infinity,
-      })
+      }),
+      new ExtractTextPlugin("styles.css")
     ]
   };
 
