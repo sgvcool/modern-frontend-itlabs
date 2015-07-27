@@ -47,6 +47,10 @@ module.exports = function(type) {
         name: "vendor",
         minChunks: Infinity,
       }),
+      new webpack.DefinePlugin({
+        VERSION: JSON.stringify("0.0.1"),
+        BROWSER_SUPPORTS_HTML5: true
+      }),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           warnings: false
