@@ -43,10 +43,6 @@ module.exports = function(type) {
         $: "jquery",
         jQuery: "jquery"
       }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: "vendor",
-        minChunks: Infinity,
-      }),
       new webpack.DefinePlugin({
         VERSION: JSON.stringify("0.0.1"),
         BROWSER_SUPPORTS_HTML5: true
@@ -55,6 +51,10 @@ module.exports = function(type) {
         compress: {
           warnings: false
         }
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        name: "vendor",
+        minChunks: Infinity,
       })
     ]
   };
