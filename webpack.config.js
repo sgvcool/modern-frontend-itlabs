@@ -45,6 +45,11 @@ module.exports = function(type) {
       new webpack.optimize.CommonsChunkPlugin({
         name: "vendor",
         minChunks: Infinity,
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false
+        }
       })
     ]
   };
