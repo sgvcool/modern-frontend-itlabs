@@ -17,14 +17,17 @@ module.exports = function(props) {
     },
     module: {
       loaders: [{
+        test: /\.jsx$/,
+        loader: 'babel?stage=0'
+      }, {
         test: /\.scss$/,
         loader: props.dev ? 'style!css!sass' : ExtractTextPlugin.extract("style", "css!sass")
       }, {
-        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url?limit=10000&minetype=application/font-woff"
-      }, {
         test: /\.css$/,
         loader: props.dev ? 'style!css' : ExtractTextPlugin.extract('style', 'css?-minimize')
+      }, {
+        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&minetype=application/font-woff"
       }, {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url?limit=10000&minetype=application/font-woff"
