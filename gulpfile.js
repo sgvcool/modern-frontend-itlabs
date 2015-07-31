@@ -29,7 +29,7 @@ var autoprefixerBrowsers = [
 
 // copy html from app to dist
 gulp.task('html', function() {
-  return gulp.src(props.app + 'index.html')
+  return gulp.src(props.app + '/index.html')
     .pipe($.rigger())
     .pipe(gulp.dest(props.dist))
     .pipe($.size({ title : 'html' }))
@@ -94,10 +94,11 @@ gulp.task('build', ['clean'], function(){
 });
 
 
-gulp.task('dev', function () {
+gulp.task('dev', ['clean'], function () {
   gulp.start('resources');
   gulp.src(props.app + '/template/index-dev.html')
-    .pipe($.rigger()).pipe($.rename('index.html'))
+    .pipe($.rename('index.html'))
+    .pipe($.rigger())
     .pipe(gulp.dest(props.dist));
   props.dev = true;
   var url = 'http://' + props.host + ':' + props.port;

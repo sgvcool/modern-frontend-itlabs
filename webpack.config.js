@@ -8,7 +8,7 @@ module.exports = function(props) {
     context: path.join(__dirname, props.app),
     entry: {
       app: ['./scripts/main'],
-      vendor: ['jquery', 'bootstrap-sass']
+      vendor: ['jquery', 'bootstrap-sass', 'react']
     },
     output: {
       path: path.join(__dirname, props.dist),
@@ -17,7 +17,7 @@ module.exports = function(props) {
     },
     module: {
       loaders: [{
-        test: /\.jsx$/,
+        test: /\.(js|jsx)$/,
         loader: 'babel?stage=0'
       }, {
         test: /\.scss$/,
@@ -42,6 +42,7 @@ module.exports = function(props) {
         loader: "url?limit=10000&minetype=image/svg+xml"
       }]
     },
+    resolveLoader: { root: path.join(__dirname, "node_modules") },
     // postcss: props.dev ? [autoprefixer] : [autoprefixer({browsers: ['> 1%']})],
     devServer: {
       contentBase: props.dist,

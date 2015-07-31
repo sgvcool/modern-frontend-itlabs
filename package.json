@@ -5,9 +5,10 @@
   },
   "devDependencies": {
     "autoprefixer-core": "^5.2.1",
+    "babel": "^5.8.19",
     "babel-core": "^4.7.0",
     "babel-jest": "^4.0.0",
-    "babel-loader": "^4.2.0",
+    "babel-loader": "^5.3.2",
     "css-loader": "^0.15.5",
     "del": "^1.1.1",
     "extract-text-webpack-plugin": "^0.8.2",
@@ -34,7 +35,6 @@
     "webpack-dev-server": "^1.10.1"
   },
   "dependencies": {
-    "babel": "^5.8.19",
     "bootstrap-sass": "^3.3.5",
     "jquery": "^2.1.4",
     "react": "^0.13.3"
