@@ -15,20 +15,20 @@ var props = {
 };
 
 // copy html from app to dist
-gulp.task('html', function() {
+gulp.task('html', function () {
   return gulp.src(props.app + '/index.html')
     .pipe(gulp.dest(props.dist))
-    .pipe($.size({ title : 'html' }));
+    .pipe($.size({title: 'html'}));
 });
 
-gulp.task('resources', function(cb) {
+gulp.task('resources', function (cb) {
   return gulp.src(props.app + '/**/*.{png,jpg,jpeg,gif,ico}')
-    .pipe($.size({ title : 'resources' }))
+    .pipe($.size({title: 'resources'}))
     .pipe(gulp.dest(props.dist));
 });
 
 // remove bundels
-gulp.task('clean', function(cb) {
+gulp.task('clean', function (cb) {
   del([props.dist], cb);
 });
 
@@ -36,7 +36,7 @@ gulp.task('clean', function(cb) {
 gulp.task('default', ['dev']);
 
 // waits until clean is finished then builds the project
-gulp.task('build', ['clean'], function(){
+gulp.task('build', ['clean'], function () {
   gulp.start(['webpack', 'resources', 'html']);
 });
 
@@ -53,7 +53,7 @@ gulp.task('dev', ['clean'], function () {
     contentBase: dev.devServer.contentBase,
     hot: dev.devServer.hot
   }).listen(props.port, props.host, function (err) {
-    if (err) throw new gutil.PluginError('webpack-dev-server', err);
-    gutil.log('[webpack-dev-server]', url + '/webpack-dev-server/index.html');
-  });
+      if (err) throw new gutil.PluginError('webpack-dev-server', err);
+      gutil.log('[webpack-dev-server]', url + '/webpack-dev-server/index.html');
+    });
 });

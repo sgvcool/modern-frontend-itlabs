@@ -1,9 +1,10 @@
 var path = require("path"),
   node_modules = path.join(__dirname, 'node_modules'),
   webpack = require("webpack"),
+  autoprefixer = require("autoprefixer-core"),
   ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-module.exports = function(props) {
+module.exports = function (props) {
   var config = {
     context: path.join(__dirname, props.app),
     entry: {
@@ -42,8 +43,8 @@ module.exports = function(props) {
         loader: "url?limit=10000&minetype=image/svg+xml"
       }]
     },
-    resolveLoader: { root: path.join(__dirname, "node_modules") },
-    // postcss: props.dev ? [autoprefixer] : [autoprefixer({browsers: ['> 1%']})],
+    resolveLoader: {root: path.join(__dirname, "node_modules")},
+    postcss: props.dev ? [autoprefixer] : [autoprefixer({browsers: ['> 1%']})],
     devServer: {
       contentBase: props.dist,
       hot: true
