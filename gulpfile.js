@@ -14,50 +14,11 @@ var props = {
   port: $.util.env.port || 3000
 };
 
-// https://github.com/ai/autoprefixer
-var autoprefixerBrowsers = [
-  'ie >= 9',
-  'ie_mob >= 10',
-  'ff >= 30',
-  'chrome >= 34',
-  'safari >= 6',
-  'opera >= 23',
-  'ios >= 6',
-  'android >= 4.4',
-  'bb >= 10'
-];
-
 // copy html from app to dist
 gulp.task('html', function() {
   return gulp.src(props.app + '/index.html')
-    .pipe($.rigger())
     .pipe(gulp.dest(props.dist))
-    .pipe($.size({ title : 'html' }))
-    .pipe($.connect.reload());
-});
-
-gulp.task('styles', function(cb) {
-
-  return gulp.src(props.app + 'styles/main.scss')
-    .pipe($.sass.sync({
-      outputStyle: 'expanded',
-      precision: 10,
-      includePaths: ['.']
-    }).on('error', $.sass.logError))
-    .pipe($.autoprefixer({browsers: autoprefixerBrowsers}))
-    .pipe($.size({ title : 'css' }))
-    .pipe($.connect.reload());
-});
-
-// add livereload on the given port
-gulp.task('serve', function() {
-  $.connect.server({
-    root: props.dist,
-    port: props.port,
-    livereload: {
-      port: 35729
-    }
-  });
+    .pipe($.size({ title : 'html' }));
 });
 
 gulp.task('resources', function(cb) {
@@ -66,39 +27,23 @@ gulp.task('resources', function(cb) {
     .pipe(gulp.dest(props.dist));
 });
 
-// watch styl, html and js file changes
-gulp.task('watch', function() {
-  gulp.watch(props.app + 'styles/*.css', ['styles']);
-  gulp.watch(props.app + 'index.html', ['html']);
-  gulp.watch(props.app + 'scripts/**/*.js', ['scripts']);
-});
-
 // remove bundels
 gulp.task('clean', function(cb) {
   del([props.dist], cb);
 });
 
-gulp.task('webpack', function(){
-  webpack(webpackConfig(props), function(err, stats) {
-    if(err) throw console.log(err);
-    console.log("webpack" + stats.toString());
-  });
-});
-
 // by default build project and then watch files in order to trigger livereload
-gulp.task('default', ['build', 'serve', 'watch']);
+gulp.task('default', ['dev']);
 
 // waits until clean is finished then builds the project
 gulp.task('build', ['clean'], function(){
   gulp.start(['webpack', 'resources', 'html']);
 });
 
-
 gulp.task('dev', ['clean'], function () {
   gulp.start('resources');
   gulp.src(props.app + '/template/index-dev.html')
     .pipe($.rename('index.html'))
-    .pipe($.rigger())
     .pipe(gulp.dest(props.dist));
   props.dev = true;
   var url = 'http://' + props.host + ':' + props.port;
