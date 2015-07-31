@@ -1,7 +1,8 @@
 import React from "react/addons";
 
-var Grid = React.createClass({
-  render: function() {
+export default
+class Grid extends React.Component {
+  render() {
     return (<div className="container advertising-container">
       <div className="row">
         <div className="col-sm-4">
@@ -37,6 +38,4 @@ var Grid = React.createClass({
       </div>
     </div>)
   }
-});
-
-export default Grid;
+}

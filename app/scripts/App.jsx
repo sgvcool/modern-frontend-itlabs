@@ -3,8 +3,10 @@ import Navbar from "./Navbar.jsx";
 import Carousel from "./Carousel.jsx";
 import Grid from "./Grid.jsx";
 
-var App = React.createClass({
-  render: function() {
+
+export default
+class App extends React.Component {
+  render() {
     return (
       <div>
         <Navbar />,
@@ -13,11 +15,9 @@ var App = React.createClass({
       </div>
     )
   }
-});
+}
 
 React.render(
   <App />,
   document.getElementById('app')
 );
-
-export default App;
