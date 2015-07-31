@@ -29,6 +29,10 @@ $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
   border: 2px solid #777;
   padding: 10px 15px;
   margin: 5px 0;
+  > img {
+    display: inline-block;
+    vertical-align: baseline;
+  }
 }
 .navbar-brand:hover {
   border-color: #5e5e5e;
