@@ -11,19 +11,19 @@ var Carousel = React.createClass({
         </ol>
         <div className="carousel-inner" role="listbox">
           <div className="item active">
-            <img src="/images/background-1.jpg" alt="Slide #1"/>
+            <img src="images/background-1.jpg" alt="Slide #1"/>
             <div className="carousel-caption">
               Slide #1
             </div>
           </div>
           <div className="item">
-            <img src="/images/background-2.jpg" alt="Slide #2"/>
+            <img src="images/background-2.jpg" alt="Slide #2"/>
             <div className="carousel-caption">
               Slide #2
             </div>
           </div>
           <div className="item">
-            <img src="/images/background-3.jpg" alt="Slide #3"/>
+            <img src="images/background-3.jpg" alt="Slide #3"/>
             <div className="carousel-caption">
               Slide #3
             </div>

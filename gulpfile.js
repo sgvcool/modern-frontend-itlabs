@@ -1,11 +1,13 @@
-var gulp = require('gulp');
-var path = require('path');
-var $ = require('gulp-load-plugins')();
-var del = require('del');
-var webpack = require('webpack');
-var webpackConfig = require('./webpack.config');
-var webpackDevServer = require('webpack-dev-server');
-var gutil = require('gulp-util');
+var gulp = require('gulp'),
+  path = require('path'),
+  $ = require('gulp-load-plugins')(),
+  del = require('del'),
+  webpack = require('webpack'),
+  webpackConfig = require('./webpack.config'),
+  webpackDevServer = require('webpack-dev-server'),
+  gutil = require('gulp-util'),
+  util = require('util');
+
 
 var props = {
   app: 'app',
@@ -32,10 +34,8 @@ gulp.task('clean', function (cb) {
   del([props.dist], cb);
 });
 
-// by default build project and then watch files in order to trigger livereload
 gulp.task('default', ['dev']);
 
-// waits until clean is finished then builds the project
 gulp.task('build', ['clean'], function () {
   gulp.start(['webpack', 'resources', 'html']);
 });
@@ -57,3 +57,36 @@ gulp.task('dev', ['clean'], function () {
       gutil.log('[webpack-dev-server]', url + '/webpack-dev-server/index.html');
     });
 });
+
+gulp.task('dist', ['clean'], function (callback) {
+  gulp.start('resources');
+  var prod = Object.create(webpackConfig(props));
+  webpack(prod, function (err, stats) {
+    gutil.log('[webpack:build]', stats.toString());
+    if (err) throw new gutil.PluginError('webpack:build', err);
+    var json = stats.toJson();
+    if (json.errors.length > 0)
+      throw new gutil.PluginError('webpack:build', json.errors);
+    if (json.warnings.length > 0)
+      throw new gutil.PluginError('webpack:build', json.warnings);
+    gulp.src(props.app + '/template/index.html')
+      .pipe($.replace(/app\.css/, chunkName(json, 'app', '.css')))
+      .pipe($.replace(/vendor\.js/, chunkName(json, 'vendor', '.js')))
+      .pipe($.replace(/app\.js/, chunkName(json, 'app', '.js')))
+      .pipe(gulp.dest(props.dist));
+    require('fs').writeFileSync(
+      path.join(__dirname, "./", "stats.json"),
+      JSON.stringify(stats.toJson()));
+    callback();
+  });
+});
+
+var chunkName = function (json, name, ext) {
+  var chunk = json.assetsByChunkName[name];
+  if (util.isArray(chunk)) {
+    chunk = chunk.filter(function (filename) {
+      return path.extname(filename).toLowerCase() === ext
+    }).shift();
+  }
+  return chunk;
+};

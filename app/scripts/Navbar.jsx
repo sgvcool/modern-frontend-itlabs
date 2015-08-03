@@ -13,7 +13,9 @@ class Navbar extends React.Component {
             <span className="icon-bar"></span>
             <span className="icon-bar"></span>
           </button>
-          <a className="navbar-brand" href="#">Modern <img src="apple-touch-icon.png" alt="Modern Frontend"/>rontend</a>
+          <a className="navbar-brand" href="/">
+            {this.props.hasBrandImage ? <img className="navbar-brand-image" src="apple-touch-icon.png" alt={this.props.children} /> : null}
+            {this.props.children ? this.props.children : "Company title"}</a>
         </div>
       </div>
     </nav>)

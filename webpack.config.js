@@ -13,8 +13,8 @@ module.exports = function (props) {
     },
     output: {
       path: path.join(__dirname, props.dist),
-      filename: props.dev ? '[name].bundle.js' : '[chunkhash].js',
-      chunkFilename: props.dev ? '[id].chunk.js' : '[chunkhash].js'
+      filename: props.dev ? '[name].js' : '[chunkhash].js',
+      chunkFilename: props.dev ? '[id].js' : '[chunkhash].js'
     },
     module: {
       loaders: [{
@@ -25,7 +25,7 @@ module.exports = function (props) {
         loader: props.dev ? 'style!css!sass' : ExtractTextPlugin.extract("style", "css!sass")
       }, {
         test: /\.css$/,
-        loader: props.dev ? 'style!css' : ExtractTextPlugin.extract('style', 'css?-minimize')
+        loader: props.dev ? 'style!css!postcss' : ExtractTextPlugin.extract('style', 'css?-minimize!postcss')
       }, {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url?limit=10000&minetype=application/font-woff"
@@ -58,10 +58,7 @@ module.exports = function (props) {
         VERSION: JSON.stringify("0.0.1"),
         BROWSER_SUPPORTS_HTML5: true
       }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: "vendor",
-        minChunks: Infinity
-      }),
+      new webpack.optimize.CommonsChunkPlugin('vendor', props.dev ? '[name].js' : '[chunkhash].js')
     ]
   };
   if (props.dev) {
@@ -70,13 +67,13 @@ module.exports = function (props) {
     );
   } else {
     config.plugins.push(
-      new ExtractTextPlugin('style.css'),
+      new ExtractTextPlugin('[contenthash].css'),
       new webpack.optimize.OccurenceOrderPlugin(true),
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {warning: false},
-        sourceMap: false,
-        output: {comments: false}
-      }),
+      //new webpack.optimize.UglifyJsPlugin({
+      //  compress: {warning: false},
+      //  sourceMap: false,
+      //  output: {comments: false}
+      //}),
       new webpack.optimize.DedupePlugin(),
       new webpack.NoErrorsPlugin(),
       new webpack.DefinePlugin({

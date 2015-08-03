@@ -7,32 +7,32 @@ class Grid extends React.Component {
       <div className="row">
         <div className="col-sm-4">
           <a href="#" className="advertising-item">
-            <img src="/images/header.jpg" alt="Ad #1" className="img-responsive"/>
+            <img src="images/header.jpg" alt="Ad #1" className="img-responsive"/>
           </a>
         </div>
         <div className="col-sm-4">
           <a href="#" className="advertising-item">
-            <img src="/images/header.jpg" alt="Ad #1" className="img-responsive"/>
+            <img src="images/header.jpg" alt="Ad #1" className="img-responsive"/>
           </a>
         </div>
         <div className="col-sm-4">
           <a href="#" className="advertising-item">
-            <img src="/images/header.jpg" alt="Ad #1" className="img-responsive"/>
+            <img src="images/header.jpg" alt="Ad #1" className="img-responsive"/>
           </a>
         </div>
         <div className="col-sm-4">
           <a href="#" className="advertising-item">
-            <img src="/images/header.jpg" alt="Ad #1" className="img-responsive"/>
+            <img src="images/header.jpg" alt="Ad #1" className="img-responsive"/>
           </a>
         </div>
         <div className="col-sm-4">
           <a href="#" className="advertising-item">
-            <img src="/images/header.jpg" alt="Ad #1" className="img-responsive"/>
+            <img src="images/header.jpg" alt="Ad #1" className="img-responsive"/>
           </a>
         </div>
         <div className="col-sm-4">
           <a href="#" className="advertising-item">
-            <img src="/images/header.jpg" alt="Ad #1" className="img-responsive"/>
+            <img src="images/header.jpg" alt="Ad #1" className="img-responsive"/>
           </a>
         </div>
       </div>
