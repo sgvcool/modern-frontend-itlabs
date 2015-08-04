@@ -1,7 +1,8 @@
 import React from "react/addons";
 
-var Carousel = React.createClass({
-  render: function () {
+export default
+class Carousel extends React.Component{
+  render() {
     return (
       <div id="carousel-example-generic" className="carousel slide" data-ride="carousel">
         <ol className="carousel-indicators">
@@ -40,6 +41,4 @@ var Carousel = React.createClass({
       </div>
     )
   }
-});
-
-export default Carousel;
+}
