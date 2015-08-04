@@ -2,6 +2,7 @@ var path = require("path"),
   node_modules = path.join(__dirname, 'node_modules'),
   webpack = require("webpack"),
   autoprefixer = require("autoprefixer-core"),
+  csswring = require("csswring"),
   ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = function (props) {
@@ -17,12 +18,13 @@ module.exports = function (props) {
       chunkFilename: props.dev ? '[id].js' : '[chunkhash].js'
     },
     module: {
+      preLoaders: [],
       loaders: [{
         test: /\.(js|jsx)$/,
         loader: 'babel?stage=0'
       }, {
         test: /\.scss$/,
-        loader: props.dev ? 'style!css!sass' : ExtractTextPlugin.extract("style", "css!sass")
+        loader: props.dev ? 'style!css!sass' : ExtractTextPlugin.extract("style", "css?-minimize!postcss!sass")
       }, {
         test: /\.css$/,
         loader: props.dev ? 'style!css!postcss' : ExtractTextPlugin.extract('style', 'css?-minimize!postcss')
@@ -43,8 +45,8 @@ module.exports = function (props) {
         loader: "url?limit=10000&minetype=image/svg+xml"
       }]
     },
-    resolveLoader: {root: path.join(__dirname, "node_modules")},
-    postcss: props.dev ? [autoprefixer] : [autoprefixer({browsers: ['> 1%']})],
+    resolveLoader: {root: node_modules},
+    postcss: props.dev ? [autoprefixer] : [autoprefixer({browsers: ['> 1%']}), csswring],
     devServer: {
       contentBase: props.dist,
       hot: true
@@ -66,19 +68,22 @@ module.exports = function (props) {
       new webpack.HotModuleReplacementPlugin()
     );
   } else {
+    config.module.preLoaders.push(
+      {test: /\.(js|jsx)$/, exclude: [node_modules], loader: 'eslint'}
+    );
     config.plugins.push(
       new ExtractTextPlugin('[contenthash].css'),
       new webpack.optimize.OccurenceOrderPlugin(true),
-      //new webpack.optimize.UglifyJsPlugin({
-      //  compress: {warning: false},
-      //  sourceMap: false,
-      //  output: {comments: false}
-      //}),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {warnings: false},
+        sourceMap: false,
+        output: {comments: false}
+      }),
       new webpack.optimize.DedupePlugin(),
       new webpack.NoErrorsPlugin(),
       new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV_MODE: JSON.stringify('production')
+          NODE_ENV: JSON.stringify('production')
         }
       })
     );
