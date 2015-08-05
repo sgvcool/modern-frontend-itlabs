@@ -24,7 +24,7 @@ module.exports = function (props) {
         loader: 'babel?stage=0'
       }, {
         test: /\.scss$/,
-        loader: props.dev ? 'style!css!sass' : ExtractTextPlugin.extract("style", "css?-minimize!postcss!sass")
+        loader: props.dev ? 'style!css!postcss!sass' : ExtractTextPlugin.extract("style", "css?-minimize!postcss!sass")
       }, {
         test: /\.css$/,
         loader: props.dev ? 'style!css!postcss' : ExtractTextPlugin.extract('style', 'css?-minimize!postcss')

@@ -4,8 +4,7 @@ import Carousel from "./Carousel.jsx";
 import Grid from "./Grid.jsx";
 
 
-export default
-class App extends React.Component {
+export default class App extends React.Component {
   render() {
     return (
       <div>
